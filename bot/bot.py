@@ -3,11 +3,12 @@ import os
 
 import discord
 
-from dotenv import load_dotenv
-
 from discord.ext import commands
 
-load_dotenv()
+# from dotenv import load_dotenv
+
+
+# load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 # a client is an object that represents a connection to DIscord
