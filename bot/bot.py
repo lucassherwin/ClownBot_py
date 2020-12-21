@@ -5,10 +5,12 @@ import discord
 
 from discord.ext import commands
 
-# from dotenv import load_dotenv
+import json
+
+from dotenv import load_dotenv
 
 
-# load_dotenv()
+load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 # a client is an object that represents a connection to DIscord
@@ -19,6 +21,20 @@ client = discord.Client()
 # {username: clown_score}
 # after updating sort based on clown_score
 leaderboard = {}
+# open the clowns.json file and read in the data
+with open('bot/clowns.json') as json_file:
+    leaderboard = json.load(json_file)
+
+# method to save the current leaderboard to the json
+def save_leaderboard():
+    global leaderboard
+
+    with open('bot/clowns.json', 'w') as outfile:
+        json.dump(leaderboard, outfile)
+
+def sort_leaderboard():
+    global leaderboard
+    leaderboard = {k: v for k, v in sorted(leaderboard.items(), key=lambda item: item[1], reverse=True)}
 
 # gets the members
 # currently the only member listed is the clown bot
@@ -49,7 +65,6 @@ async def on_message(message):
         # create an embed from the leaderboard obj
         embed = discord.Embed.from_dict(leaderboard)
         embed.title = 'Biggest Clowns'
-        # print(embed)
         for clown in leaderboard:
             embed.add_field(name=f'**{clown}**', value=f'> Clowns: {leaderboard[clown]}\n' ,inline=False)
         await message.channel.send(embed=embed)
@@ -78,26 +93,26 @@ async def on_raw_reaction_add(payload):
         channel = client.get_channel(payload.channel_id)
         # get the id of the message reacted to
         m_id = payload.message_id
-        # get the id of the user that sent the message
-        # u_id = payload.user_id
         # fetch the message with the id
         message = await channel.fetch_message(m_id)
         sender = str(message.author)
         sender = sender.split('#')[0]
+        # if the sender is ClownBot do nothing
+        if sender == 'ClownBot_py':
+            return
         # check for that user in the leaderboard obj
         # if the user is already in the leaderboard
-        if sender in leaderboard:
+        elif sender in leaderboard:
             leaderboard[sender] += 1
-            # function to sort the leaderboard after it has been updated
-            leaderboard = {k: v for k, v in sorted(leaderboard.items(), key=lambda item: item[1], reverse=True)}
+            sort_leaderboard()
+            save_leaderboard()
             print(leaderboard)
         # the user is not already in the leaderboard
         else:
             leaderboard[sender] = 1
-            leaderboard = {k: v for k, v in sorted(leaderboard.items(), key=lambda item: item[1])}
+            sort_leaderboard()
+            save_leaderboard()
             print(leaderboard)
-        await channel.send('{} is a 🤡'.format(sender))
-
 
 # on_ready() handles the event when the Client has established a connection to Discord
 @client.event
