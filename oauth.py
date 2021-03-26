@@ -24,3 +24,11 @@ class Oauth:
 
     access_token = requests.post(url=Oauth.discord_token_url, data=payload).json()
     return access_token.get('access_token')
+
+  @staticmethod
+  def get_user_json(access_token):
+    url = f'{Oauth.discord_api_url}/users/@me'
+    headers = {'Authorization': f'Bearer {access_token}'}
+
+    user_obj = requests.get(url=url, headers=headers).json()
+    return user_obj
