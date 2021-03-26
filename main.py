@@ -1,5 +1,5 @@
 from logging import debug
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from oauth import Oauth
 
 app = Flask(__name__)
@@ -10,6 +10,7 @@ def home():
 
 @ app.route('/login')
 def login():
+  code = request.args.get('code') # gets the 
   return 'Success'
 
 
