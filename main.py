@@ -1,8 +1,9 @@
 from logging import debug
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 from oauth import Oauth
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'test123'
 
 @app.route('/') # define our route
 def home():
@@ -10,7 +11,12 @@ def home():
 
 @ app.route('/login')
 def login():
-  code = request.args.get('code') # gets the 
+  code = request.args.get('code')
+
+  at = Oauth.get_access_token(code)
+
+  session['token'] = at
+
   return 'Success'
 
 
