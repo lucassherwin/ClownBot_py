@@ -17,16 +17,7 @@ async def home():
 
 @ app.route('/login')
 async def login():
-  code = request.args.get('code')
-
-  at = Oauth.get_access_token(code)
-
-  session['token'] = at
-
-  user = Oauth.get_user_json(at)
-  user_name, user_id = user.get('username'), user.get('discriminator')
-
-  return f'Success, logged in as {user_name}#{user_id}'
+  return await discord.create_session()
 
 
 
