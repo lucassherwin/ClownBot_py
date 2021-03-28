@@ -13,7 +13,7 @@ discord = DiscordOAuth2Session(app)
 
 @app.route('/') # define our route
 async def home():
-  return render_template('index.html') # renders index.html file from templates folder
+  return await render_template('index.html') # renders index.html file from templates folder
 
 @app.route('/login')
 async def login():
