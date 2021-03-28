@@ -17,7 +17,10 @@ def login():
 
   session['token'] = at
 
-  return 'Success'
+  user = Oauth.get_user_json(at)
+  user_name, user_id = user.get('username'), user.get('discriminator')
+
+  return f'Success, logged in as {user_name}#{user_id}'
 
 
 
