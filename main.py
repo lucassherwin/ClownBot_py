@@ -1,16 +1,22 @@
 from logging import debug
-from flask import Flask, render_template, request, session
-from oauth import Oauth
+from quart import Quart, render_template, request, session
+from quart_discord import DiscordOAuth2Session
+import os
 
-app = Flask(__name__)
+app = Quart(__name__)
 app.config['SECRET_KEY'] = 'test123'
+app.config['DISCORD_CLIENT_ID'] = 789975160517689374
+app.config['DISCORD_CLIENT_SECRET'] = os.getenv('DISCORD_CLIENT_SECRET')
+app.config['DISCORD_REDIRECT_URI'] = 'http://127.0.0.1:5000/callback'
+
+discord = DiscordOAuth2Session(app)
 
 @app.route('/') # define our route
-def home():
+async def home():
   return render_template('index.html', discord_url=Oauth.discord_login_url) # renders index.html file from templates folder
 
 @ app.route('/login')
-def login():
+async def login():
   code = request.args.get('code')
 
   at = Oauth.get_access_token(code)
