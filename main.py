@@ -1,5 +1,5 @@
 from logging import debug
-from quart import Quart, render_template, request, session
+from quart import Quart, render_template, request, session, redirect, url_for
 from quart_discord import DiscordOAuth2Session
 import os
 
@@ -13,11 +13,21 @@ discord = DiscordOAuth2Session(app)
 
 @app.route('/') # define our route
 async def home():
-  return render_template('index.html', discord_url=Oauth.discord_login_url) # renders index.html file from templates folder
+  return render_template('index.html') # renders index.html file from templates folder
 
-@ app.route('/login')
+@app.route('/login')
 async def login():
   return await discord.create_session()
+
+@app.route('/callback')
+async def callback():
+  try:
+    await discord.callback()
+  except:
+    return redirect(url_for('login'))
+
+  user = await discord.fetch_user()
+  return f'{user.name}#{user.discriminator}'
 
 
 
