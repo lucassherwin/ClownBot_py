@@ -13,7 +13,7 @@ app.secret_key = b'random string'
 app.config['DISCORD_CLIENT_ID'] = 789975160517689374
 app.config['DISCORD_CLIENT_SECRET'] = os.getenv('DISCORD_CLIENT_SECRET')
 app.config['DISCORD_REDIRECT_URI'] = 'http://127.0.0.1:5000/callback'
-app.config["DISCORD_BOT_TOKEN"] = "Nzg5OTc1MTYwNTE3Njg5Mzc0.X953sw.qWA1Xm0TKBlG7jIpbgDEWlCRxy8"
+app.config["DISCORD_BOT_TOKEN"] = os.getenv('DISCORD_BOT_TOKEN')
 
 discord = DiscordOAuth2Session(app)
 
