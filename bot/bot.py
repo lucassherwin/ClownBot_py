@@ -2,14 +2,37 @@ import os
 
 import discord
 
-from discord.ext import commands
+from discord.ext import commands, ipc
 
 import json
+
+from dotenv import dotenv_values
+
+class MyBot(commands.Bot):
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+
+    self.ipc = ipc.Server(self, secret_key="key")
+
+    async def on_ready(self):
+      print('Bot is ready')
+
+    async def on_ipc_ready(self):
+      print('Ipc server is ready')
+
+    async def on_ipc_error(self, endpoint, error):
+      print(endpoint, 'raised', error)
+
+my_bot = MyBot(command_prefix = '!', intents = discord.Intents.default())
+
+@my_bot.ipc.route()
+async def get_guild_count(data):
+  return len(my_bot.guilds) # returns number of guilds
 
 # from dotenv import load_dotenv
 
 
-# load_dotenv()
+load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 # a client is an object that represents a connection to DIscord
@@ -122,4 +145,7 @@ async def on_ready():
     f'{guild.name}(id: {guild.id})'
   )
 
-client.run(TOKEN)
+# client.run(TOKEN)
+
+my_bot.ipc.start()
+my_bot.run(TOKEN)
