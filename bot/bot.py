@@ -68,8 +68,12 @@ async def on_message(message):
         for clown in leaderboard:
             embed.add_field(name=f'**{clown}**', value=f'> Clowns: {leaderboard[clown]}\n' ,inline=False)
         await message.channel.send(embed=embed)
-        
-
+    if message.content == '!help':
+      embed = discord.Embed(title='Help')
+      embed.add_field(name='!test', value='Test if the bot is active')
+      embed.add_field(name='!gamer', value='See who is a gamer')
+      embed.add_field(name='!clowns', value='Show a list of all the clowns')
+      embed.add_field('!help', value='Display this help message')
 
 # https://discordpy.readthedocs.io/en/latest/api.html#discord.RawReactionActionEvent
 # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_reaction_add
@@ -117,12 +121,12 @@ async def on_raw_reaction_add(payload):
 # on_ready() handles the event when the Client has established a connection to Discord
 @client.event
 async def on_ready():
-    # gets the server using built in discord get() function
-    guild = discord.utils.get(client.guilds, name=GUILD)
+  # gets the server using built in discord get() function
+  guild = discord.utils.get(client.guilds, name=GUILD)
 
-    print(
-        f'{client.user} is connected to the following guild:\n'
-        f'{guild.name}(id: {guild.id})'
-    )
+  print(
+    f'{client.user} is connected to the following guild:\n'
+    f'{guild.name}(id: {guild.id})'
+  )
 
 client.run(TOKEN)
