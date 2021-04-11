@@ -66,14 +66,15 @@ async def on_message(message):
         embed = discord.Embed.from_dict(leaderboard)
         embed.title = 'Biggest Clowns'
         for clown in leaderboard:
-            embed.add_field(name=f'**{clown}**', value=f'> Clowns: {leaderboard[clown]}\n' ,inline=False)
+          embed.add_field(name=f'**{clown}**', value=f'> Clowns: {leaderboard[clown]}\n' ,inline=False)
         await message.channel.send(embed=embed)
-    if message.content == '!help':
+    if message.content == '!clown_help':
       embed = discord.Embed(title='Help')
-      embed.add_field(name='!test', value='Test if the bot is active')
-      embed.add_field(name='!gamer', value='See who is a gamer')
-      embed.add_field(name='!clowns', value='Show a list of all the clowns')
-      embed.add_field('!help', value='Display this help message')
+      embed.add_field(name='!test', value='Test if the bot is active', inline=False)
+      embed.add_field(name='!gamer', value='See who is a gamer', inline=False)
+      embed.add_field(name='!clowns', value='Show a list of all the clowns', inline=False)
+      embed.add_field(name='!clown_help', value='Display this help message', inline=False)
+      await message.channel.send(embed=embed)
 
 # https://discordpy.readthedocs.io/en/latest/api.html#discord.RawReactionActionEvent
 # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_reaction_add
