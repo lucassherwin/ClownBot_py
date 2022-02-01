@@ -1,16 +1,9 @@
 
 import os
-
 import discord
-
 from discord.ext import commands
-
 import json
 
-# from dotenv import load_dotenv
-
-
-# load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 # a client is an object that represents a connection to DIscord
@@ -22,28 +15,36 @@ client = discord.Client()
 # after updating sort based on clown_score
 leaderboard = {}
 # open the clowns.json file and read in the data
-with open('bot/clowns.json') as json_file:
+with open('./clowns.json') as json_file:
     leaderboard = json.load(json_file)
 
 # method to save the current leaderboard to the json
+
+
 def save_leaderboard():
     global leaderboard
 
-    with open('bot/clowns.json', 'w') as outfile:
+    with open('./clowns.json', 'w') as outfile:
         json.dump(leaderboard, outfile)
+
 
 def sort_leaderboard():
     global leaderboard
-    leaderboard = {k: v for k, v in sorted(leaderboard.items(), key=lambda item: item[1], reverse=True)}
+    leaderboard = {k: v for k, v in sorted(
+        leaderboard.items(), key=lambda item: item[1], reverse=True)}
 
 # gets the members
 # currently the only member listed is the clown bot
 # not sure if this is supposed to list all the server members
+
+
 def getMemebers(guild):
     members = '\n - '.join([member.name for member in guild.members])
     print(f'Guild Members:\n - {members}')
 
 # various message commands
+
+
 @client.event
 async def on_message(message):
     global leaderboard
@@ -66,9 +67,9 @@ async def on_message(message):
         embed = discord.Embed.from_dict(leaderboard)
         embed.title = 'Biggest Clowns'
         for clown in leaderboard:
-            embed.add_field(name=f'**{clown}**', value=f'> Clowns: {leaderboard[clown]}\n' ,inline=False)
+            embed.add_field(
+                name=f'**{clown}**', value=f'> Clowns: {leaderboard[clown]}\n', inline=False)
         await message.channel.send(embed=embed)
-        
 
 
 # https://discordpy.readthedocs.io/en/latest/api.html#discord.RawReactionActionEvent
@@ -115,14 +116,12 @@ async def on_raw_reaction_add(payload):
             print(leaderboard)
 
 # on_ready() handles the event when the Client has established a connection to Discord
+
+
 @client.event
 async def on_ready():
     # gets the server using built in discord get() function
     guild = discord.utils.get(client.guilds, name=GUILD)
-
-    print(
-        f'{client.user} is connected to the following guild:\n'
-        f'{guild.name}(id: {guild.id})'
-    )
+    print('Running ClownBot...')
 
 client.run(TOKEN)
