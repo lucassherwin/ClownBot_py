@@ -5,10 +5,12 @@ from discord.ext import commands
 import json
 
 TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD = os.getenv('DISCORD_GUILD')
+# GUILD = os.getenv('DISCORD_GUILD')
 # a client is an object that represents a connection to DIscord
 # handles events, tracks state, and interacts with Discord APIs
-client = discord.Client()
+intents = discord.Intents.all()
+intents.members = True
+client = discord.Client(intents=intents)
 
 # obj to contain the leaderboard
 # {username: clown_score}
@@ -28,10 +30,10 @@ def save_leaderboard():
         json.dump(leaderboard, outfile)
 
 
-def sort_leaderboard():
+def sort_leaderboard(guild_id):
     global leaderboard
-    leaderboard = {k: v for k, v in sorted(
-        leaderboard.items(), key=lambda item: item[1], reverse=True)}
+    leaderboard[guild_id] = {k: v for k, v in sorted(
+        leaderboard[guild_id].items(), key=lambda item: item[1], reverse=True)}
 
 # gets the members
 # currently the only member listed is the clown bot
@@ -64,11 +66,13 @@ async def on_message(message):
     if message.content == '!clowns':
         # https://discordpy.readthedocs.io/en/latest/api.html?highlight=embed#discord.Embed
         # create an embed from the leaderboard obj
-        embed = discord.Embed.from_dict(leaderboard)
+        guild_id = str(message.guild.id)
+        embed = discord.Embed()
         embed.title = 'Biggest Clowns'
-        for clown in leaderboard:
+        for clownID in leaderboard[guild_id]:
+            clown = await message.guild.fetch_member(clownID)
             embed.add_field(
-                name=f'**{clown}**', value=f'> Clowns: {leaderboard[clown]}\n', inline=False)
+                name=f'**{clown.display_name}**', value=f'> Clowns: {leaderboard[guild_id][clownID]}\n', inline=False)
         await message.channel.send(embed=embed)
 
 
@@ -94,6 +98,8 @@ async def on_raw_reaction_add(payload):
         channel = client.get_channel(payload.channel_id)
         # get the id of the message reacted to
         m_id = payload.message_id
+        # get the id of the guild the message is in
+        g_id = str(payload.guild_id)
         # fetch the message with the id
         message = await channel.fetch_message(m_id)
         sender = str(message.author)
@@ -101,19 +107,19 @@ async def on_raw_reaction_add(payload):
         # if the sender is ClownBot do nothing
         if sender == 'ClownBot_py':
             return
+        if g_id not in leaderboard.keys():
+            leaderboard[g_id] = {}
         # check for that user in the leaderboard obj
         # if the user is already in the leaderboard
-        elif sender in leaderboard:
-            leaderboard[sender] += 1
-            sort_leaderboard()
-            save_leaderboard()
-            print(leaderboard)
+        author_id = str(message.author.id)
+        if author_id in leaderboard[g_id].keys():
+            leaderboard[g_id][author_id] += 1
         # the user is not already in the leaderboard
         else:
-            leaderboard[sender] = 1
-            sort_leaderboard()
-            save_leaderboard()
-            print(leaderboard)
+            leaderboard[g_id][author_id] = 1
+        sort_leaderboard(g_id)
+        save_leaderboard()
+        print(leaderboard)
 
 # on_ready() handles the event when the Client has established a connection to Discord
 
@@ -121,7 +127,7 @@ async def on_raw_reaction_add(payload):
 @client.event
 async def on_ready():
     # gets the server using built in discord get() function
-    guild = discord.utils.get(client.guilds, name=GUILD)
+    #guild = discord.utils.get(client.guilds, name=GUILD)
     print('Running ClownBot...')
 
 client.run(TOKEN)
