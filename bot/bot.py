@@ -66,8 +66,10 @@ async def on_message(message):
     if message.content == '!test':
         print(leaderboard)
         await message.channel.send('test')
+        return
     if message.content == '!gamer':
         await message.channel.send('{} is a Gamer'.format(sender))
+        return
     # leaderboard command
     if message.content == '!clowns':
         # https://discordpy.readthedocs.io/en/latest/api.html?highlight=embed#discord.Embed
@@ -104,6 +106,7 @@ async def on_message(message):
         leaderboard[guild_id][str(clown_id)] = clown_count
         sort_leaderboard(guild_id)
         save_leaderboard()
+        return
 
 
 # https://discordpy.readthedocs.io/en/latest/api.html#discord.RawReactionActionEvent
