@@ -3,6 +3,9 @@ import os
 import discord
 from discord.ext import commands
 import json
+from dotenv import load_dotenv
+
+load_dotenv()
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 # GUILD = os.getenv('DISCORD_GUILD')
@@ -17,7 +20,7 @@ client = discord.Client(intents=intents)
 # after updating sort based on clown_score
 leaderboard = {}
 # open the clowns.json file and read in the data
-with open('./clowns.json') as json_file:
+with open('./bot/clowns.json') as json_file:
     leaderboard = json.load(json_file)
 
 # method to save the current leaderboard to the json
