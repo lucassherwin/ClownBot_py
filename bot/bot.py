@@ -20,7 +20,7 @@ client = discord.Client(intents=intents)
 # after updating sort based on clown_score
 leaderboard = {}
 # open the clowns.json file and read in the data
-with open('./bot/clowns.json') as json_file:
+with open('./clowns.json') as json_file:
     leaderboard = json.load(json_file)
 
 # method to save the current leaderboard to the json
@@ -73,10 +73,30 @@ async def on_message(message):
         embed = discord.Embed()
         embed.title = 'Biggest Clowns'
         for clownID in leaderboard[guild_id]:
+            print(clownID, type(clownID))
             clown = await message.guild.fetch_member(clownID)
             embed.add_field(
                 name=f'**{clown.display_name}**', value=f'> Clowns: {leaderboard[guild_id][clownID]}\n', inline=False)
         await message.channel.send(embed=embed)
+
+    # Manually set clown count for user, only allowed from Nick or Lucas's accounts
+    # First parameter is discord account id, second parameter is number of clowns
+    if message.content[:9] == '!clownset':
+        valid_ids = [114384475743453193, 114338477922975745]    # Nick and Lucas discord account id's
+        if message.author.id not in valid_ids:
+            return
+        args = message.content.split()
+        if len(args) < 3:
+            await message.channel.send("Not enough arguments")
+            return
+        guild_id = str(message.guild.id)
+        clown_id = args[1]
+        clown_count = int(args[2])
+        if str(message.guild.id) not in leaderboard.keys():
+            leaderboard[guild_id] = {}
+        leaderboard[guild_id][str(clown_id)] = clown_count
+        sort_leaderboard(guild_id)
+        save_leaderboard()
 
 
 # https://discordpy.readthedocs.io/en/latest/api.html#discord.RawReactionActionEvent
