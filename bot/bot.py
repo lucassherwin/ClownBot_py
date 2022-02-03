@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 import json
 from dotenv import load_dotenv
+import pathlib
 
 load_dotenv()
 
@@ -15,12 +16,14 @@ intents = discord.Intents.all()
 intents.members = True
 client = discord.Client(intents=intents)
 
+file_directory = pathlib.Path(__file__).parent.resolve()
+clown_file = f"{file_directory}/clowns.json"
 # obj to contain the leaderboard
 # {username: clown_score}
 # after updating sort based on clown_score
 leaderboard = {}
 # open the clowns.json file and read in the data
-with open('./clowns.json') as json_file:
+with open(clown_file) as json_file:
     leaderboard = json.load(json_file)
 
 # method to save the current leaderboard to the json
@@ -29,7 +32,7 @@ with open('./clowns.json') as json_file:
 def save_leaderboard():
     global leaderboard
 
-    with open('./clowns.json', 'w') as outfile:
+    with open(clown_file, 'w') as outfile:
         json.dump(leaderboard, outfile)
 
 
@@ -70,14 +73,18 @@ async def on_message(message):
         # https://discordpy.readthedocs.io/en/latest/api.html?highlight=embed#discord.Embed
         # create an embed from the leaderboard obj
         guild_id = str(message.guild.id)
-        embed = discord.Embed()
-        embed.title = 'Biggest Clowns'
-        for clownID in leaderboard[guild_id]:
-            print(clownID, type(clownID))
-            clown = await message.guild.fetch_member(clownID)
-            embed.add_field(
-                name=f'**{clown.display_name}**', value=f'> Clowns: {leaderboard[guild_id][clownID]}\n', inline=False)
-        await message.channel.send(embed=embed)
+
+        try:
+            embed = discord.Embed()
+            embed.title = 'Biggest Clowns'
+            for clownID in leaderboard[guild_id]:
+                clown = await message.guild.fetch_member(clownID)
+                embed.add_field(
+                    name=f'**{clown.display_name}**', value=f'> Clowns: {leaderboard[guild_id][clownID]}\n', inline=False)
+            await message.channel.send(embed=embed)
+        except KeyError:
+            await message.channel.send("No clowns yet!")
+        return
 
     # Manually set clown count for user, only allowed from Nick or Lucas's accounts
     # First parameter is discord account id, second parameter is number of clowns
