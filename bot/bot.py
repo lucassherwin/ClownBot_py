@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 import json
 from dotenv import load_dotenv
+import pathlib
 
 load_dotenv()
 
@@ -15,12 +16,14 @@ intents = discord.Intents.all()
 intents.members = True
 client = discord.Client(intents=intents)
 
+file_directory = pathlib.Path(__file__).parent.resolve()
+clown_file = f"{file_directory}/clowns.json"
 # obj to contain the leaderboard
 # {username: clown_score}
 # after updating sort based on clown_score
 leaderboard = {}
 # open the clowns.json file and read in the data
-with open('./clowns.json') as json_file:
+with open(clown_file) as json_file:
     leaderboard = json.load(json_file)
 
 # method to save the current leaderboard to the json
@@ -29,7 +32,7 @@ with open('./clowns.json') as json_file:
 def save_leaderboard():
     global leaderboard
 
-    with open('./clowns.json', 'w') as outfile:
+    with open(clown_file, 'w') as outfile:
         json.dump(leaderboard, outfile)
 
 
