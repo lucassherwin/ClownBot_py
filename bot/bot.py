@@ -87,6 +87,7 @@ async def on_message(message):
     # Nick and Lucas discord account id's
     valid_ids = [114384475743453193, 114338477922975745]
     if message.author.id not in valid_ids:
+      await message.channel.send('You are not permitted to do this!')
       return
     args = message.content.split()
     if len(args) < 3:
