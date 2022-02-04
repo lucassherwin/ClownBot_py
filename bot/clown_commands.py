@@ -71,10 +71,10 @@ class ClownInfo(commands.Cog):
         try:
             embed = discord.Embed()
             embed.title = 'Biggest Clowns'
-            for clownID in global_.leaderboard[guild_id]:
-                clown = await ctx.guild.fetch_member(clownID)
+            for clown_id in global_.leaderboard[guild_id]:
+                clown_name = await helper_functions.get_display_name(ctx, clown_id)
                 embed.add_field(
-                    name=f'**{clown.display_name}**', value=f'> Clowns: {global_.leaderboard[guild_id][clownID]}\n',
+                    name=f'**{clown_name}**', value=f'> Clowns: {global_.leaderboard[guild_id][clown_id]}\n',
                     inline=False)
             await ctx.channel.send(embed=embed)
         except KeyError:
