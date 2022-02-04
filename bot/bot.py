@@ -19,11 +19,14 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 file_directory = pathlib.Path(__file__).parent.resolve()
 global_.clown_file = f"{file_directory}/clowns.json"
+global_.name_cache_path = f"{file_directory}/name_cache.json"
 
 # open the clowns.json file and read in the data
 with open(global_.clown_file) as json_file:
   global_.leaderboard = json.load(json_file)
 
+with open(global_.name_cache_path, 'r') as json_file:
+  global_.name_cache = json.load(json_file)
 
 # on_ready() handles the event when the Client has established a connection to Discord
 @bot.event
