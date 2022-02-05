@@ -61,3 +61,12 @@ async def get_display_name(ctx, clown_id):
         with open(global_.name_cache_path, 'w') as out_file:
             json.dump(global_.name_cache, out_file)
     return global_.name_cache[guild_id]["members"][clown_id]
+
+
+def is_wordle_channel(channel_name):
+    """
+    Check if "wordle" appears in channel name at all
+    :param channel_name: String channel name
+    :return: Bool
+    """
+    return "wordle" in channel_name.lower()
