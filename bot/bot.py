@@ -35,4 +35,5 @@ async def on_ready():
 
 bot.add_cog(clown_commands.ClownInfo(bot))
 bot.add_cog(clown_commands.General(bot))
+bot.add_cog(clown_commands.Wordle(bot))
 bot.run(TOKEN)

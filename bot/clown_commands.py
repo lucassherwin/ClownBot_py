@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import helper_functions
 import global_
+import re
 
 
 class ClownInfo(commands.Cog):
@@ -128,3 +129,26 @@ class General(commands.Cog):
         :param ctx: Discord Context object
         """
         await ctx.send(f"{ctx.author} is a Gamer")
+
+
+class Wordle(commands.Cog):
+    """
+    Commands and listeners pertaining to Wordle
+    """
+
+    wordle_regex = re.compile(r"Wordle \d+ X/\d", re.IGNORECASE)
+
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        """
+        Check if user posted a failed wordle attempt in a wordle channel, and clown them if so
+        :param message:
+        """
+        if message.author == self.bot:
+            return
+        if helper_functions.is_wordle_channel(message.channel.name):
+            if re.match(self.wordle_regex, message.content):
+                await message.add_reaction('🤡')
