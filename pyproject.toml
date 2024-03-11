@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "clownbot-py"
+version = "0.1.0"
+description = "Track who are the biggest clowns in your discord server"
+authors = ["Lucas Sherwin", "Nick Hoffmann"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+"discord.py" = "^2.3.2"
+pydantic-settings = "^2.2.1"
+pydantic = "^2.6.3"
+
+[tool.poetry.group.dev.dependencies]
+yapf = "^0.40.2"
+isort = "^5.13.2"
+pylint = "^3.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,1 +1,1 @@
-worker: python3 bot/bot.py
+worker: python3 src/clown_bot/main.py
