@@ -1,3 +1,4 @@
 .env
 clowns.json
+name_cache.json
 __pycache__/

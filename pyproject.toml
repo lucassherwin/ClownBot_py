@@ -1,21 +1,59 @@
-[tool.poetry]
+[project]
 name = "clownbot-py"
-version = "0.1.0"
 description = "Track who are the biggest clowns in your discord server"
-authors = ["Lucas Sherwin", "Nick Hoffmann"]
+authors = [
+    {name = "Lucas Sherwin"},
+    {name = "Nick Hoffmann"}
+]
 readme = "README.md"
+requires-python = ">=3.11"
+dynamic = ["version"]
 
-[tool.poetry.dependencies]
-python = "^3.8"
-"discord.py" = "^2.3.2"
-pydantic-settings = "^2.2.1"
-pydantic = "^2.6.3"
+dependencies = [
+    "discord.py==2.*",
+    "pydantic-settings==2.*",
+    "pydantic==2.*",
+    "pymongo[srv]==4.*",
+]
 
-[tool.poetry.group.dev.dependencies]
-yapf = "^0.40.2"
-isort = "^5.13.2"
-pylint = "^3.1.0"
+[tool.hatch.version]
+path = "src/clown_bot/__init__.py"
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.*",
+]
+
+[tool.hatch.envs.default]
+dev-mode = true
+python = "3.11"
+features = ["dev"]
+
+[tool.hatch.envs.main]
+dev-mode = false
+python = "3.11"
+features = []
+
+[tool.hatch.envs.default.env-vars]
+PYTHONPATH = "src"
+
+[tool.hatch.envs.default.scripts]
+bot = "python src/clown_bot/main.py"
+
+[tool.pytest.ini_options]
+testpaths = "src/tests"
+
+[tool.ruff]
+lint.ignore = ["UP007", "RET504", "G004", "FBT002", "TRY003", "EM101", "FBT001", "SIM118"]
+lint.extend-select = ["Q", "RUF100", "C90", "UP", "I"]
+line-length = 90
+lint.flake8-quotes = {inline-quotes = "double", multiline-quotes = "double"}
+lint.isort = { known-first-party = ["clown_bot", "tests"] }
+target-version = "py311"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/clown_bot"]

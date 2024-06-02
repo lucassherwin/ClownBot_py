@@ -1,4 +1,5 @@
 """Main entry point for ClownBot"""
+
 import asyncio
 import json
 from pathlib import Path
@@ -11,6 +12,8 @@ from clown_bot.commands.general import General
 from clown_bot.commands.wordle import Wordle
 from clown_bot.config import Config
 
+# ruff: noqa: ASYNC101
+
 
 async def main():
     """Main entry point for ClownBot"""
@@ -22,21 +25,16 @@ async def main():
     intents.members = True
     intents.message_content = True
 
-    file_directory = Path(__file__).parent.resolve()
-    clown_file = str(file_directory / "clowns.json")
-    name_cache_file = str(file_directory / "name_cache.json")
+    name_cache_file = Path().cwd() / config.name_cache_file
 
-    # open the clowns.json file and read in the data
-    with open(clown_file, "r", encoding="utf-8") as json_file:
-        leaderboard = json.load(json_file)
+    if not name_cache_file.exists():
+        name_cache_file.touch()
+        name_cache = {}
+    else:
+        with open(name_cache_file, encoding="utf-8") as json_file:
+            name_cache = json.load(json_file)
 
-    with open(name_cache_file, "r", encoding="utf-8") as json_file:
-        name_cache = json.load(json_file)
-
-    clown_data = ClownData(clown_file,
-                           name_cache_file,
-                           leaderboard=leaderboard,
-                           name_cache=name_cache)
+    clown_data = ClownData(name_cache=name_cache)
     bot = ClownBot(clown_data, command_prefix=config.prefix, intents=intents)
 
     async with bot:
