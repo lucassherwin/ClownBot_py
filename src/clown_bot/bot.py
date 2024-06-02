@@ -32,7 +32,7 @@ class ClownBot(Bot):
         self.db = get_database()
 
     async def on_ready(self):
-        """ "Ready event handler"""
+        """Ready event handler"""
         logger.info(
             f"Logged in as `{self.user}` with ID `{self.user.id}`. Running ClownBot..."
         )
