@@ -2,3 +2,4 @@
 clowns.json
 name_cache.json
 __pycache__/
+.vscode/

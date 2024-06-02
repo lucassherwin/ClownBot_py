@@ -8,3 +8,14 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+    profiles:
+      - db
+  wait:
+    image: hello-world:latest
+    profiles:
+      - db
+    depends_on:
+      mongodb:
+        condition: service_healthy

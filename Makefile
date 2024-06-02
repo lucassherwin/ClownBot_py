@@ -1,4 +1,4 @@
-.PHONY: format start start_db stop test
+.PHONY: format start start_db stop test build
 
 include .env
 export $(shell sed 's/=.*//' .env)
@@ -8,7 +8,7 @@ format:
 	hatch fmt
 
 start_db:
-	docker-compose up -d
+	docker-compose --profile db up -d
 
 start: start_db
 	hatch run bot
@@ -18,3 +18,6 @@ stop:
 
 test: start_db
 	hatch run pytest
+
+build:
+	docker build -t clown_bot:latest .

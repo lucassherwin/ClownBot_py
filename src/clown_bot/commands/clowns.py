@@ -39,7 +39,9 @@ class ClownInfo(Cog):
 
             guild_id = str(payload.guild_id)
             increment_clown(self.bot.db, guild_id, message.author.id)
-            logger.debug(self.bot.clown_data)
+            logger.debug(
+                f"Incremented clown for user `{message.author.id}` in guild `{guild_id}`"
+            )
 
     @command()
     async def clowns(self, ctx: Context):
@@ -86,9 +88,10 @@ class ClownInfo(Cog):
 
         guild_id = str(ctx.guild.id)
         set_clown(self.bot.db, guild_id, int(clown_id), clown_num)
+        await ctx.reply(f"Set clown count for `{clown_id}` to `{clown_num}`")
 
     @clownset.error
     async def clownset_error(self, ctx: Context, error):
         """Handle errors for `clownset` command"""
         if isinstance(error, CheckFailure):
-            await ctx.send("Hey, that's illegal")
+            await ctx.reply("Hey, that's illegal")
