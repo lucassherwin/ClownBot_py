@@ -1,25 +1,23 @@
-.PHONY: lint format dependencies env start
+.PHONY: format start start_db stop test build
 
 include .env
 export $(shell sed 's/=.*//' .env)
 
-PYTHONPATH := export PYTHONPATH=$(shell pwd)/src
-
-
-lint:
-	./bin/lint.sh
-
 format:
-	./bin/format.sh
+	hatch fmt -f
+	hatch fmt
 
-dependencies:
-	poetry lock
-	poetry export -f requirements.txt -f requirements.txt -o requirements.txt --without-hashes
+start_db:
+	docker-compose --profile db up -d
 
-env:
-	poetry shell
-	poetry install --with dev --all-extras
+start: start_db
+	hatch run bot
 
-start:
-	(export PYTHONPATH=$(PYTHONPATH) ; poetry shell)
-	(export PYTHONPATH=$(PYTHONPATH) ; python src/clown_bot/main.py)
+stop:
+	docker-compose down -v
+
+test: start_db
+	hatch run pytest
+
+build:
+	docker build -t clown_bot:latest .

@@ -13,17 +13,22 @@ Track who are the biggest clowns in your server!
 
 
 ## Development
-You must have [Poetry](https://python-poetry.org/) and `make` installed. To get started initially, created a `.env` file in the top level of this repo with `DISCORD_TOKEN=<token>` in it, then run:
+You must have [Hatch](https://hatch.pypa.io/) and `make` installed. To get started initially, create a `.env` file in the top level of this repo with `DISCORD_TOKEN=<token>` in it, then run:
 ```bash
-poetry env use python
-make dependencies
-make env
 make start
 ```
 
-If you update dependencies, run `make dependencies` to re-generate the `poetry.lock` file and `requirements.txt` from it. `requirements.txt` is required for SparkedHost, where we host the bot.
+Run unit tests with `make test`.
 
-Also make sure to run `make format` and `make lint` before merging to main to format and lint your code, respectively.
+If you update the core dependency list in `pyproject.toml`, run 
+```bash
+hatch dep show requirements > requirements.txt
+```
+to export them to a requirements file. This is required for SparkedHost, where we host the bot.
+
+Also make sure to run `make format` before merging to main to format and lint your code. This uses Hatch's built in `fmt` [command](https://hatch.pypa.io/latest/config/internal/static-analysis/)
+
+Also ensure that you version bump appropriately with new changes. This can be done with the [hatch versioning tool](https://hatch.pypa.io/latest/version/)
 
 ### Logging
-ClownBot uses the `ClownBot` logger. Log level for this can be controlled by setting the `LOGLEVEL` env var. See [logging levels](https://docs.python.org/3/library/logging.html#logging-levels) for possible log level strings. When running locally, you can set this in your `.env` file.
+ClownBot uses the `ClownBot` logger. Log level for this can be controlled by setting the `LOG_LEVEL` env var. See [logging levels](https://docs.python.org/3/library/logging.html#logging-levels) for possible log level strings. When running locally, you can set this in your `.env` file.

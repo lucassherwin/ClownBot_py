@@ -1,4 +1,5 @@
 """Commands and listeners pertaining to Wordle"""
+
 import logging
 import re
 
@@ -16,7 +17,7 @@ class Wordle(Cog):
     Commands and listeners pertaining to Wordle
     """
 
-    wordle_regex = re.compile(r"Wordle \d+ X/\d", re.IGNORECASE)
+    wordle_regex = re.compile(r"Wordle \d+(,\d+)* X\/\d", re.IGNORECASE)
 
     def __init__(self, bot: ClownBot):
         self.bot = bot
@@ -29,7 +30,8 @@ class Wordle(Cog):
         """
         if message.author == self.bot:
             return
-        if is_wordle_channel(message.channel.name):
-            if re.match(self.wordle_regex, message.content):
-                await message.add_reaction("🤡")
-                logger.debug(f"Clowned {message.author} for failed wordle attempt")
+        if is_wordle_channel(message.channel.name) and re.match(
+            self.wordle_regex, message.content
+        ):
+            await message.add_reaction("🤡")
+            logger.debug(f"Clowned {message.author} for failed wordle attempt")

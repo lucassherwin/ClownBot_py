@@ -20,10 +20,10 @@ class General(Cog):
     @command()
     async def test(self, ctx: Context):
         """
-      Test command
-      :param ctx: Discord Context object
-      """
-        logger.debug(self.bot.clown_data.leaderboard)
+        Test command
+        :param ctx: Discord Context object
+        """
+        logger.debug(self.bot.clown_data)
         await ctx.send("test")
 
     @command()
