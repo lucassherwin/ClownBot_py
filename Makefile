@@ -1,4 +1,4 @@
-.PHONY: format start start_db stop test build
+.PHONY: format start start_db stop test build start_prod stop_prod
 
 include .env
 export $(shell sed 's/=.*//' .env)
@@ -21,3 +21,9 @@ test: start_db
 
 build:
 	docker build -t clown_bot:latest .
+
+start_prod:
+	docker-compose --profile prod up -d
+
+stop_prod:
+	docker-compose --profile prod down -v

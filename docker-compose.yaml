@@ -12,10 +12,26 @@ services:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
     profiles:
       - db
+      - local
   wait:
     image: hello-world:latest
     profiles:
       - db
+      - local
     depends_on:
       mongodb:
         condition: service_healthy
+
+  clownbot-prod:
+    container_name: clownbot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    profiles:
+      - prod
+    restart: always
+    tty: true
+    stdin_open: true
+    network_mode: host
