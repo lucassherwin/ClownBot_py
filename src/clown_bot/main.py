@@ -6,6 +6,7 @@ import discord
 
 from clown_bot.bot import ClownBot, ClownData
 from clown_bot.commands.clowns import ClownInfo
+from clown_bot.commands.games import Games
 from clown_bot.commands.general import General
 from clown_bot.commands.wordle import Wordle
 from clown_bot.config import Config
@@ -28,6 +29,7 @@ async def main():
         await bot.add_cog(ClownInfo(bot))
         await bot.add_cog(General(bot))
         await bot.add_cog(Wordle(bot))
+        await bot.add_cog(Games(bot))
         await bot.start(config.discord_token.get_secret_value())
 
 

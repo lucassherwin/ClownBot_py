@@ -44,7 +44,7 @@ bot = "python src/clown_bot/main.py"
 testpaths = "src/tests"
 
 [tool.ruff]
-lint.ignore = ["UP007", "RET504", "G004", "FBT002", "TRY003", "EM101", "FBT001", "SIM118"]
+lint.ignore = ["UP007", "RET504", "G004", "FBT002", "TRY003", "EM101", "FBT001", "SIM118", "S311"]
 lint.extend-select = ["Q", "RUF100", "C90", "UP", "I"]
 line-length = 90
 lint.flake8-quotes = {inline-quotes = "double", multiline-quotes = "double"}
