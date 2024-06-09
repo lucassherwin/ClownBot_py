@@ -36,12 +36,11 @@ class Games(Cog):
     async def games(self, ctx: Context, subcommand: str, *args):
         """Base command for games commands. Call `!games help` for more info.
 
-
         :param ctx: Discord Context object
         :param subcommand: Subcommand to run
         :param args: Arguments for the subcommand
         """
-        if subcommand == "help":
+        if not subcommand or subcommand == "help":
             lines = [line.strip(" ") for line in self.help_text.split("\n")]
             await ctx.reply("\n".join(lines))
         elif subcommand == "list":
@@ -63,6 +62,7 @@ class Games(Cog):
         games = get_games(self.bot.db, str(ctx.guild.id))
         if not games:
             await ctx.reply("No games added yet!")
+            return
         await ctx.reply(f"All game options:\n{self._format_list(games)}")
 
     async def _add_games(self, ctx: Context, games: list[str]):
