@@ -10,7 +10,11 @@ Track who are the biggest clowns in your server!
   * This command tells you who is a gamer
 * !clownset
   * command to manually set a users clownscore
-
+* !games - Base command for game selection functionality
+  * `list` - list all games in the list of possibilities
+  * `add` - add games to the list of possible games
+  * `remove` - remove games from the list
+  * `choose` - choose a random game from the list
 
 ## Development
 You must have [Hatch](https://hatch.pypa.io/) and `make` installed. To get started initially, create a `.env` file in the top level of this repo with `DISCORD_TOKEN=<token>` in it, then run:
