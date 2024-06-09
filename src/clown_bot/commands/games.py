@@ -21,6 +21,8 @@ class Games(Cog):
 
     If adding/removing a game title with spaces, wrap the title in quotes, like `!games add "Among Us"`.
 
+    Subcommands:
+    help: Display this help message
     list: List all games
     add: Add a list of games
     \t- Example: !games add "Among Us" Minecraft
@@ -33,7 +35,7 @@ class Games(Cog):
         self.bot = bot
 
     @command()
-    async def games(self, ctx: Context, subcommand: str, *args):
+    async def games(self, ctx: Context, subcommand: str | None, *args):
         """Base command for games commands. Call `!games help` for more info.
 
         :param ctx: Discord Context object
